@@ -1,0 +1,9 @@
+tabulate
+python-dotenv
+openai
+tqdm
+pandas
+matplotlib
+wordcloud
+thefuzz
+python-Levenshtein

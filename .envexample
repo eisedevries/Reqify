@@ -1,0 +1,5 @@
+api_version=""
+azure_endpoint = ""
+api_key=""
+model_name="gpt-4.1"
+deployment="gpt-4.1"

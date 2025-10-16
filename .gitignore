@@ -1,0 +1,25 @@
+# Virtual environment folders
+env/
+venv/
+
+# Archive folder
+archive/
+
+# Environment files
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Cache directories
+.cache/
+
+.zip
+*.zip
+
+*.log
+.log
+progress.log

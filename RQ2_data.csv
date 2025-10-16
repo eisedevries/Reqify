@@ -1,0 +1,22 @@
+Interview ID,Study,Original ID,Scenario,Prompt,LLM,Recall Elicited,Recall Partially Elicited,R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11,R12
+5267f55a-9337-49b3-9747-d05c69c877f0,B,,Ski,Long,GPT-4o,0.58333333,0.16666667,Elicited,Elicited,Elicited,Elicited,Elicited,No,Elicited,Partially Elicited,Elicited,No,No,Partially Elicited
+5ef11a7f-45af-4e3a-8399-2cfb469c5253,B,,Ski,Short,GPT-4o,0.5,0.25,Elicited,Elicited,Elicited,Partially Elicited,Elicited,Elicited,Elicited,No,No,Partially Elicited,No,Partially Elicited
+1fa79326-df01-46c6-b09a-582a6f7396a9,B,,Salon,Short,GPT-4o,0.625,0.125,Elicited,Elicited,Partially Elicited,No,Elicited,Elicited,Elicited,No,,,,
+ef90e0df-81db-44b1-a004-c3c5287eff60,B,,Ski,Short,GPT-4o,0.41666667,0.16666667,Elicited,Elicited,Elicited,No,Elicited,No,Elicited,No,No,No,Partially Elicited,Partially Elicited
+3a6077fa-20e9-4eb9-b590-00e5dde74ca3,D,,Ski,Long,GPT-4o,0.41666667,0.16666667,Elicited,Partially Elicited,No,Elicited,Elicited,No,Elicited,No,No,Elicited,No,Partially Elicited
+3cca3e81-59a7-4543-97dc-5b4f945d3326,D,,Ski,Long,GPT-4o,0.66666667,0,Elicited,Elicited,Elicited,Elicited,Elicited,Elicited,Elicited,No,No,Elicited,No,No
+447f8927-ecf4-4fe5-8396-f3ed2cf84f75,D,,Ski,Long,GPT-4o,0.58333333,0.16666667,Elicited,Elicited,Partially Elicited,Elicited,Elicited,Elicited,Elicited,No,No,Elicited,No,Partially Elicited
+46515d9e-58ad-487d-9eb9-23584a9c987b,D,,Ski,Long,GPT-4o,0.66666667,0.08333333,Elicited,Elicited,Elicited,Elicited,Elicited,Elicited,Elicited,No,No,No,Elicited,Partially Elicited
+4fdb024f-c213-4091-9567-bcb80e822990,D,,Ski,Long,GPT-4o,0.41666667,0.33333333,Elicited,Partially Elicited,Elicited,Partially Elicited,Elicited,Elicited,No,No,Elicited,Partially Elicited,No,Partially Elicited
+5012efc8-c30a-4922-b54e-d9fe8ef3356e,D,,Ski,Long,GPT-4o,0.5,0.16666667,Elicited,Elicited,Partially Elicited,Elicited,Elicited,Elicited,Elicited,No,No,Partially Elicited,No,No
+55e944c3-0821-491c-be8c-daccf374e827,D,,Salon,Short,GPT-4o,0.625,0,Elicited,Elicited,Elicited,No,Elicited,Elicited,No,No,,,,
+5ef30849-40da-4787-aea5-6ce30d8316b0,D,,Salon,Short,GPT-4o,0.875,0,Elicited,Elicited,No,Elicited,Elicited,Elicited,Elicited,Elicited,,,,
+62eae299-e773-4cb1-8873-915c1b853e58,D,,Salon,Long,GPT-4o,0.5,0,Elicited,Elicited,No,No,Elicited,Elicited,No,No,,,,
+77b8b3ae-8c49-4ef3-9cc7-81965d1ab986,D,,Salon,Long,GPT-4o,0.125,0.5,Partially Elicited,Partially Elicited,Partially Elicited,No,No,Elicited,Partially Elicited,No,,,,
+959a0116-b74b-40bb-93a5-2e302ebe719b,D,,Salon,Short,GPT-4o,0.75,0.125,Elicited,Elicited,No,Elicited,Elicited,Elicited,Partially Elicited,Elicited,,,,
+9b79199f-6e38-4234-8be6-1bfa7068bfa1,D,,Ski,Short,GPT-4o,0.83333333,0.16666667,Elicited,Elicited,Elicited,Partially Elicited,Elicited,Elicited,Elicited,Elicited,Elicited,Elicited,Elicited,Partially Elicited
+d08c455a-35cc-43ce-aaf2-ddae7520e4ff,D,,Salon,Short,GPT-4o,0.5,0,Elicited,Elicited,No,Elicited,Elicited,No,No,No,,,,
+e1edb050-9f6a-489e-9bb5-250273d9bd1d,D,,Salon,Short,GPT-4o,0.75,0,Elicited,Elicited,Elicited,Elicited,Elicited,Elicited,No,No,,,,
+ed345832-0cec-4695-8f89-7eeb230076bd,D,,Ski,Short,GPT-4o,0.41666667,0.16666667,Elicited,No,Partially Elicited,No,Elicited,Elicited,Elicited,No,No,Elicited,No,Partially Elicited
+fdd53def-9dcc-4ccf-9890-ab3ebef859e1,D,,Salon,Long,GPT-4o,0.5,0,Elicited,Elicited,No,No,Elicited,Elicited,No,No,,,,
+ba13038b-352a-4fd1-a2bc-78828412ab09,D,,Ski,Long,GPT-4o,0.41666667,0.16666667,Elicited,Elicited,Elicited,No,Elicited,No,Elicited,No,No,No,Partially Elicited,Partially Elicited
