@@ -209,5 +209,5 @@ plot_combined_boxplot_with_meta_labels(
     meta_grouped,
     single_grouped,
     "Boxplot of Requirement Lengths by Position (Meta vs Single)",
-    "overlay_requirement_lengths_boxplot_iterations.png"
+    "boxplot_per_position.png"
 )
