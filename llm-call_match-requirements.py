@@ -69,7 +69,7 @@ def create_llm_prompt(transcript: str, official_reqs: List[Dict], elicited_batch
     """Constructs the messages payload for the LLM API call."""
     
     # --- PROMPT REWRITTEN FOR STRICTER MATCHING ---
-    system_prompt = """You are a meticulous and exacting expert requirements analyst. Your work is defined by precision and a strict adherence to rules. Your primary task is to analyze a list of "Elicited Requirements" against an "Official Requirements List" and an "Interview Transcript".
+    MATCH_PROMPT = """You are a meticulous and exacting expert requirements analyst. Your work is defined by precision and a strict adherence to rules. Your primary task is to analyze a list of "Elicited Requirements" against an "Official Requirements List" and an "Interview Transcript".
 
 You will perform two sequential tasks for each Elicited Requirement.
 
@@ -123,7 +123,7 @@ You MUST return your complete analysis as a single JSON array of objects. Each o
     Please provide your analysis in the specified JSON format.
     """
 
-    return [{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt}]
+    return [{"role": "system", "content": MATCH_PROMPT}, {"role": "user", "content": user_prompt}]
 
 def get_llm_analysis(client: AzureOpenAI, messages: List[Dict], retries=3, delay=5) -> List[Dict]:
     """Makes an API call to the LLM, parses the JSON response, and handles retries."""
