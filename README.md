@@ -1,104 +1,101 @@
-Note this codebase is not yet well documented and described, this will be done in the future!
+# Reqify
+This repository was created for the course [Software production](https://osiris-student.uu.nl/#/onderwijscatalogus/extern/cursus?cursuscode=INFOMSPR&taal=en&collegejaar=huidig) at Utrecht University. It was made by Eise de Vries, Liza Lausberg and Laurens Sebel.
 
+The repository contains a toolkit for automated requirements elicitation from interview transcripts and requirements mapping with a companion workflow for validation and human review. For concrete commands, usage and exact script names see `usage_demo.ipynb`.
 
-Limitations of code:
-- some csv have a , as delimiter others have ;
-- amount of requirements and requirement names (e.g. R.SA.4.1) are hardcoded in code
+## What it does in short
+* A pipeline that extracts candidate requirements from transcripts
+* Integrity and traceability checks for requirement–quote pairs
+* Matching of elicited items to a ground truth list
+* A human-in-the loop interface to confirm or reject matches
+* Summary metrics including precision recall and F1
 
+For details on inputs and outputs as well as example runs open `usage_demo.ipynb`.
 
+## Data preparation
+The dataset used in this project originates from the paper *LLMREI: Automating Requirements Elicitation Interviews with LLMs* by Korn et al. The dataset is available here: https://zenodo.org/records/15016930. For this project we specifically focus on dataset `RQ2_data.csv` which contains a ground truth list of requirements which can be elicited from the transcripts available in `interviews_json.zip`. Note that we recreated `RQ2_data.csv`. In this repository `RQ2_data.csv` is available under `ground_truth/dataset_llmrei.csv` and our recreated ground truth is available under `ground_truth/dataset_new.csv`.
 
+In order to run the pipeline you need to have the following files:
+- `ground_truth/dataset_new.csv`
+- `requirements_list.csv`
+- `scenarios_list.csv`
+Also you will need to create a `.env` file in order to communicate with the Azure OpenAI API.
 
+Please note that one of the limitations of this repository is that the code is, to some extent, tailored to the specific data we have. This occurs because certain parts of the code reference a fixed data length. For example, if your dataset includes additional requirements, you will need to adjust the code accordingly; otherwise, the extra columns in your CSV files may not be processed correctly. Some of the parts that have to be changed have been marked using the commen `# CHANGE FIXED DATA LENGTH HERE` comment in the codebase.
 
-Recreation:
-1. make sure all transcripts are in `transcripts` folder
-2. run `llm-call_retrieve-requirements.py`, check `progress.log` for any LLM calls that were not automatically fixed. This creates `single_results.csv` and `meta_results.csv` in `results` folder
-3. run `verify_csv_content.py` to check for any issues in the csv files created. Check the python file for instructions on what FAILED means for a specific test
-4. run `verify_quotes.py` to check failed quotes. Check this file for the conditions. Most likely some quotes fail. Check these in `single_results.csv` or `meta_results.csv`
-5. run `llm-call_check-requirements.py`, again check `progress.log` for any failed LLM calls that were not succesfully retried
-6. run `verify_human.py` and go through the on-screen steps in the GUI
-7. open folder results. Move `analysis_meta_human.csv`, `analysis_single_human.csv` and `human_verification_state.json` into a folder inside `results` folde which you name _researcherx_ where the x is the number of the researcher. In our case 3 researchers conducted the human-in-the-loop intervention so we have `researcher1`, `researcher2` and `researcher3` folders
-8. run `combine_human_assessments.py`
-9. run `confusion_matrix.py`
+## How to run
+### Activate virtual environment
+The code was written for Python 3.13, but may work on earlier releases.
 
-
-
-# Human Verification Tool Setup Guide
-
-## 1. Create a Python Virtual Environment
-
-Python 3.13 is preferred but Python 3.11 or 3.12 may also work. Check your version:
-
-`python --version`  
-or  
-`python3 --version`
-
-Navigate to your project folder:
-
+1. Navigate to your project folder:
 `cd path/to/your/project`
 
-Create the virtual environment:
-
+2. Create a virtual environment (commands may differ per OS):
 `python3.13 -m venv venv`
-
-If Python 3.13 is not available, use:
-
-`python3.12 -m venv venv`  
-or  
-`python3.11 -m venv venv`
-
-On some Windows setups:
-
+or
 `py -3.13 -m venv venv`
 
-## 2. Activate the Virtual Environment
+3. Activate the virtual environment
+Linux / macOS:  
+`source venv/bin/activate`
 
 Windows:  
 `venv\Scripts\activate`
 
-macOS:  
-`source venv/bin/activate`
-
-Visual Studio Code:  
-1. Open the project folder in VS Code  
-2. Open the terminal (View → Terminal)  
-3. Run the activation command for your system  
-4. Select the interpreter from the venv folder if prompted
-
-## 3. Install Dependencies
-
+4. Install dependencies
 `pip install -r requirements.txt`
 
-## 4. Run the Verification Script
+5. You should now be able to run Python scripts e.g.:
+Linux / macOS:  
+`python3 verify_human.py`
 
-Windows terminal:  
+Windows:  
 `python verify_human.py`  
 or  
 `py verify_human.py`
 
-macOS terminal:  
-`python3 verify_human.py`
+### Order of scripts
+For more details see `usage_demo.ipynb`
 
-Visual Studio Code:  
-1. Open verify_human.py  
-2. Make sure the correct interpreter is selected  
-3. Press Run or F5
+1. Place transcript JSON files in the `transcripts` folder.
+2. Run the extraction workflow using `llm-call_retrieve-requirements.py` to produce `results/single_results.csv` and `results/meta_results.csv`.  
+   The exact command sequence lives in `usage_demo.ipynb`.
+3. Run the CSV verification using `verify_csv_content.py` and the quote traceability checks using `verify_quotes.py`.  
+   `usage_demo.ipynb` shows how to interpret a FAILED message for each test.
+4. Run the requirement to ground truth matching step using `llm-call_match-requirements.py`.  
+   Check `progress.log` for any LLM calls that were not auto recovered.
+5. Launch the human verification UI using `verify_human_GUI.py` and go through the on-screen steps.
+6. After each reviewer completes their pass move `analysis_meta_human.csv`, `analysis_single_human.csv` and `human_verification_state.json` into `results/researcherX` where X is the reviewer number.
+7. Combine human assessments into consensus files using `combine_human_assessments.py`.
+8. Generate confusion matrices for the LLM only files and the human confirmed files using `confusion_matrix.py`.
 
-## 5. Using the Verification Interface
+Every command and filename you need appears in `usage_demo.ipynb`.
 
-- Arrow keys to navigate between pages and items  
-- y to mark an item as a match  
-- n to mark an item as not a match
+### Other scripts
+The folder `descriptive` contains various other Python scripts that can be used for analyzes.
 
-## 6. Output Files
+## Recreation checklist
+1. Confirm all transcripts are in `transcripts`
+2. Produce `single_results.csv` and `meta_results.csv`
+3. Verify CSV content and fix any reported issues
+4. Verify quotes and review failed ones in the results CSVs
+5. Run the requirement checking workflow and review `progress.log`
+6. Run the human verification UI
+7. Organize reviewer outputs into `results/researcher1` `results/researcher2` `results/researcher3`
+8. Combine human assessments
+9. Build confusion matrices
 
-The results folder contains:  
-- human_verification_state.json which tracks the current state  
-- analysis_meta_human.csv and analysis_single_human.csv which contain verification results
+## Human verification tool
+The human verification tool has various keyboard shortcuts:
+  y marks a match  
+  n marks not a match
+  arrow keys to go up and down a requirement match and move to the next and previous ground truth requirement
 
-To start over delete:
+## Limitations
+There are various limitations the project currently has. Two notable ones:
+* Some CSV files use comma as a delimiter while others use semicolon. Because of this some code expects commas whereas in other cases semicolons are expected
+* The number of requirements and requirement identifiers for example `R.SA.4.1` are configured in code as they directly refer to various CSV files. Therefore, to run the pipeline using a different ground truth dataset various code snippets have to be changed. See section *Data preparation*.
 
-`analysis_meta_human.csv`  
-`analysis_single_human.csv`  
-`human_verification_state.json`
 
-Then run the script again.
+## To start over
+Delete the results folder.

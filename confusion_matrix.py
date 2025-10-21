@@ -159,7 +159,7 @@ def analyze_requirement_data():
 
 
         
-        
+        # CHANGE FIXED DATA LENGTH HERE
         requirement_columns = [
             'R.SA.1', 'R.SA.2', 'R.SA.3', 'R.SA.4.1', 'R.SA.4.2', 'R.SA.5.1', 'R.SA.5.2',
             'R.SA.6.1', 'R.SA.6.2', 'R.SA.7', 'R.SA.8', 'R.SK.1', 'R.SK.2', 'R.SK.3',

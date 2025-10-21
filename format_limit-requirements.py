@@ -79,7 +79,7 @@ def trim_csv_file(file_path: str, last_column_to_keep: str):
 
 def main():
     """Main entry point for running the script directly or via import."""
-    TARGET_COLUMN = "R30_QT"
+    TARGET_COLUMN = "R30_QT" # CHANGE FIXED DATA LENGTH HERE in case you want more or less than 30 requirements
 
     try:
         base_directory = os.getcwd()

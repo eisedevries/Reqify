@@ -210,8 +210,8 @@ def process_results_file(
         header = next(reader, None)
         if not header: return
 
-        req_start_idx = 4 if is_meta_file else 1
-        req_indices = [i for i in range(req_start_idx, len(header), 2)]
+        req_start_idx = 4 if is_meta_file else 1 # CHANGE FIXED DATA LENGTH HERE
+        req_indices = [i for i in range(req_start_idx, len(header), 2)] # CHANGE FIXED DATA LENGTH HERE
 
         for row_idx, row in enumerate(reader, start=2):
             if not row or not row[0].strip(): continue

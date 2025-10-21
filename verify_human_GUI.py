@@ -148,6 +148,8 @@ class VerificationApp:
         with open(self.paths[self.mode]['results'], 'r', encoding='utf-8') as f: self.results_data = list(csv.reader(f, delimiter=';'))
         
         self.load_state()
+        # CHANGE FIXED DATA LENGTH HERE
+
         self.req_columns = [col for col in self.analysis_df.columns if col.strip().startswith('R.')]
         self.current_req_index = 0
         self.create_main_ui()

@@ -111,7 +111,7 @@ LOG_FILE = "progress.log"
 SINGLE_RESULTS_FILE = RESULTS_DIR / "single_results.csv"
 META_RESULTS_FILE = RESULTS_DIR / "meta_results.csv"
 META_ITERATIONS = 3
-MAX_REQUIREMENTS_FOR_HEADER = 30
+MAX_REQUIREMENTS_FOR_HEADER = 30 # CHANGE FIXED DATA LENGTH HERE in case you want more or less than 30 requirements
 MAX_RETRIES = 3
 
 # --- SETUP FUNCTIONS ---
@@ -271,6 +271,7 @@ def run_single_prompt_workflow(client):
     deployment_name = os.getenv("deployment")
 
     headers = ['Interview ID']
+    # CHANGE FIXED DATA LENGTH HERE
     for i in range(1, MAX_REQUIREMENTS_FOR_HEADER + 1):
         headers.extend([f'R{i}_REQ', f'R{i}_QT'])
     prepare_csv(SINGLE_RESULTS_FILE, headers)

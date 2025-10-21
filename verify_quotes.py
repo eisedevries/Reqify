@@ -211,11 +211,13 @@ def main():
     single_file_path = os.path.join(results_dir, "single_results.csv")
     meta_file_path = os.path.join(results_dir, "meta_results.csv")
 
+    # CHANGE FIXED DATA LENGTH HERE
     failed_single = verify_quotes_in_transcripts(
         single_file_path, transcripts_dir, req_start_letter="B"
     )
     print_failed_quotes_report("single_results.csv", failed_single)
 
+    # CHANGE FIXED DATA LENGTH HERE
     failed_meta = verify_quotes_in_transcripts(
         meta_file_path, transcripts_dir, req_start_letter="E"
     )

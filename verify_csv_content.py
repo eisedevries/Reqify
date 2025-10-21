@@ -239,6 +239,7 @@ def main():
     meta_file_path = os.path.join(base, "results", "meta_results.csv")
 
     # Single results uses requirement pairs starting at B C and no System Prompt Check
+    # CHANGE FIXED DATA LENGTH HERE
     single_data, single_total_requirements, single_total_quotes, single_failed, single_missing_quotes = process_csv(
         single_file_path, check_role=False, req_start_letter="B"
     )
@@ -274,6 +275,7 @@ def main():
     print_missing_quotes("single_results.csv", single_missing_quotes)
 
     # Meta results uses requirement pairs starting at E F and System Prompt Check enabled
+    # CHANGE FIXED DATA LENGTH HERE
     meta_data, meta_total_requirements, meta_total_quotes, meta_failed, meta_missing_quotes = process_csv(
         meta_file_path, check_role=True, req_start_letter="E"
     )
