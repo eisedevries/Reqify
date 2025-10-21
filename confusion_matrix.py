@@ -139,30 +139,26 @@ def analyze_requirement_data():
 
         print("Please select a file to analyze:")
         for i, filename in enumerate(analysis_files):
-            print(f"  {i + 1}: {filename}")
+            print(f" {i + 1}: {filename}")
+        print(" 0: All files")
 
-        selection = None # This will be the selected filename, e.g., "my_analysis.csv"
-        while selection is None:
+        selected_files = []
+        while not selected_files:
             try:
-                choice = int(input(f"\nEnter the number of the file (1-{len(analysis_files)}): "))
-                if 1 <= choice <= len(analysis_files):
-                    selection = analysis_files[choice - 1] 
+                choice_raw = input(f"\nEnter the number of the file 1 to {len(analysis_files)} or 0 for all: ").strip().lower()
+                if choice_raw in {"0", "a", "all", "*"}:
+                    selected_files = analysis_files
                 else:
-                    print("Invalid number. Please try again.")
+                    choice = int(choice_raw)
+                    if 1 <= choice <= len(analysis_files):
+                        selected_files = [analysis_files[choice - 1]]
+                    else:
+                        print("Invalid number. Please try again.")
             except ValueError:
-                print("Invalid input. Please enter a number.")
+                print("Invalid input. Please enter a number or 0 for all.")
 
-        human_analysis_path = os.path.join(results_folder, selection)
-        print(f"\nSelected file: {human_analysis_path}\n")
-        
-        # --- Prepare output file path ---
-        # Get base filename without extension (e.g., "combined_analysis_meta_human")
-        base_name, _ = os.path.splitext(selection)
-        output_filename = f"confusion_{base_name}.txt"
-        output_path = os.path.join(results_folder, output_filename)
 
         
-        ground_truth_path = os.path.join('ground_truth', 'dataset_new.csv')
         
         requirement_columns = [
             'R.SA.1', 'R.SA.2', 'R.SA.3', 'R.SA.4.1', 'R.SA.4.2', 'R.SA.5.1', 'R.SA.5.2',
@@ -171,66 +167,142 @@ def analyze_requirement_data():
             'R.SK.10.2', 'R.SK.11.1', 'R.SK.11.2', 'R.SK.12.1', 'R.SK.12.2'
         ]
 
-        print("Loading data files with robust method...")
+
+        ground_truth_path = os.path.join('ground_truth', 'dataset_new.csv')
+
+        print("Loading ground truth with robust method...")
         ground_truth_data = load_and_clean_csv(ground_truth_path)
-        human_analysis_data = load_and_clean_csv(human_analysis_path)
-        print("Data loaded successfully.\n")
+        print("Ground truth loaded.\n")
 
-        is_meta_file = 'meta' in selection.lower()
-
-        # --- Open the output file to write results ---
-        with open(output_path, 'w', encoding='utf-8') as f_out:
-            print(f"Saving confusion matrix results to: {output_path}\n")
+        for selection in selected_files:
+            human_analysis_path = os.path.join(results_folder, selection)
+            print(f"\nSelected file: {human_analysis_path}\n")
             
-            if is_meta_file:
-                # --- META FILE LOGIC (3 Iterations) ---
-                print("Meta file detected. Running analysis for iterations 1, 2, and 3.")
+            base_name, _ = os.path.splitext(selection)
+            output_filename = f"confusion_{base_name}.txt"
+            output_path = os.path.join(results_folder, output_filename)
+
+            print("Loading analysis file with robust method...")
+            human_analysis_data = load_and_clean_csv(human_analysis_path)
+            print("Data loaded successfully.\n")
+
+            is_meta_file = 'meta' in selection.lower()
+
+            with open(output_path, 'w', encoding='utf-8') as f_out:
+                print(f"Saving confusion matrix results to: {output_path}\n")
                 
-                for iter_to_check in ['1', '2', '3']:
+                if is_meta_file:
+                    print("Meta file detected. Running analysis for iterations 1, 2, and 3.")
+                    for iter_to_check in ['1', '2', '3']:
+                        results = {
+                            "True Positives": [], "False Positives": [],
+                            "False Negatives": [], "True Negatives": []
+                        }
+                        print(f"--- Comparing data for Iteration {iter_to_check} ---")
+
+                        for human_key, human_row in human_analysis_data.items():
+                            try:
+                                interview_id, scenario, iteration = human_key
+                            except ValueError:
+                                print(f"Error: 'meta' file '{selection}' seems to be missing iteration data. Aborting.")
+                                break
+
+                            if iteration != iter_to_check:
+                                continue
+                            
+                            gt_key = (interview_id, scenario)
+
+                            if gt_key in ground_truth_data:
+                                gt_row = ground_truth_data[gt_key]
+                                for col in requirement_columns:
+                                    if col not in gt_row or col not in human_row:
+                                        continue
+                                    
+                                    gt_val = gt_row.get(col, '').strip().lower()
+                                    human_val = human_row.get(col, '').strip()
+                                    gt_is_elicited = gt_val != 'no'
+                                    human_is_elicited = human_val != ''
+                                    message = f"ID: {interview_id}, Scen: {scenario}, Iter: {iteration}, Req: {col}"
+
+                                    if gt_is_elicited and human_is_elicited:
+                                        results["True Positives"].append(message)
+                                    elif not gt_is_elicited and human_is_elicited:
+                                        results["False Positives"].append(message)
+                                    elif gt_is_elicited and not human_is_elicited:
+                                        results["False Negatives"].append(message)
+                                    elif not gt_is_elicited and not human_is_elicited:
+                                        results["True Negatives"].append(message)
+                            else:
+                                print(f"Warning: Entry for {gt_key} not in ground truth. Skipping.")
+
+                        print("Comparison complete.\n")
+                        
+                        if PRINT_FULL_RESULTS:
+                            for category, items in results.items():
+                                print(f"--- {category} (Total: {len(items)}) ---")
+                                if not items:
+                                    print("None Found")
+                                else:
+                                    for item in items:
+                                        print(item)
+                            print("\n" + "="*60 + "\n")
+
+                        tp = len(results["True Positives"])
+                        fp = len(results["False Positives"])
+                        fn = len(results["False Negatives"])
+                        tn = len(results["True Negatives"])
+                        
+                        print_performance_metrics(tp, fp, fn, tn, iteration_num=iter_to_check, output_file=f_out)
+
+                else:
+                    print("Single analysis file detected. Running combined analysis.")
                     results = {
                         "True Positives": [], "False Positives": [],
                         "False Negatives": [], "True Negatives": []
                     }
-                    print(f"--- Comparing data for Iteration {iter_to_check} ---")
 
-                    for human_key, human_row in human_analysis_data.items():
+                    print("Comparing data...")
+                    for key, human_row in human_analysis_data.items():
                         try:
-                            interview_id, scenario, iteration = human_key
+                            interview_id, scenario = key
                         except ValueError:
-                            print(f"Error: 'meta' file '{selection}' seems to be missing iteration data. Aborting.")
-                            return
+                            print(f"Error: File '{selection}' has unexpected key structure. Expected (ID, Scenario). Aborting.")
+                            break
 
-                        if iteration != iter_to_check:
-                            continue
-                        
-                        gt_key = (interview_id, scenario)
-
-                        if gt_key in ground_truth_data:
-                            gt_row = ground_truth_data[gt_key]
+                        if key in ground_truth_data:
+                            gt_row = ground_truth_data[key]
+                            
                             for col in requirement_columns:
-                                if col not in gt_row or col not in human_row: continue
+                                if col not in gt_row or col not in human_row:
+                                    continue
                                 
                                 gt_val = gt_row.get(col, '').strip().lower()
                                 human_val = human_row.get(col, '').strip()
                                 gt_is_elicited = gt_val != 'no'
                                 human_is_elicited = human_val != ''
-                                message = f"ID: {interview_id}, Scen: {scenario}, Iter: {iteration}, Req: {col}"
+                                message = f"ID: {interview_id}, Scenario: {scenario}, Requirement: {col}"
 
-                                if gt_is_elicited and human_is_elicited: results["True Positives"].append(message)
-                                elif not gt_is_elicited and human_is_elicited: results["False Positives"].append(message)
-                                elif gt_is_elicited and not human_is_elicited: results["False Negatives"].append(message)
-                                elif not gt_is_elicited and not human_is_elicited: results["True Negatives"].append(message)
+                                if gt_is_elicited and human_is_elicited:
+                                    results["True Positives"].append(message)
+                                elif not gt_is_elicited and human_is_elicited:
+                                    results["False Positives"].append(message)
+                                elif gt_is_elicited and not human_is_elicited:
+                                    results["False Negatives"].append(message)
+                                elif not gt_is_elicited and not human_is_elicited:
+                                    results["True Negatives"].append(message)
                         else:
-                            print(f"Warning: Entry for {gt_key} not in ground truth. Skipping.")
+                            print(f"Warning: Entry for {key} found in human analysis but not in ground truth. Skipping.")
 
                     print("Comparison complete.\n")
-                    
+
                     if PRINT_FULL_RESULTS:
                         for category, items in results.items():
                             print(f"--- {category} (Total: {len(items)}) ---")
-                            if not items: print("None Found")
+                            if not items:
+                                print("None Found")
                             else:
-                                for item in items: print(item)
+                                for item in items:
+                                    print(item)
                         print("\n" + "="*60 + "\n")
 
                     tp = len(results["True Positives"])
@@ -238,61 +310,10 @@ def analyze_requirement_data():
                     fn = len(results["False Negatives"])
                     tn = len(results["True Negatives"])
                     
-                    # Pass the file handle to the print function
-                    print_performance_metrics(tp, fp, fn, tn, iteration_num=iter_to_check, output_file=f_out)
+                    print_performance_metrics(tp, fp, fn, tn, iteration_num=None, output_file=f_out)
 
-            else:
-                # --- SINGLE FILE LOGIC (Original behavior) ---
-                print("Single analysis file detected. Running combined analysis.")
-                results = {
-                    "True Positives": [], "False Positives": [],
-                    "False Negatives": [], "True Negatives": []
-                }
-
-                print("Comparing data...")
-                for key, human_row in human_analysis_data.items():
-                    try:
-                        interview_id, scenario = key
-                    except ValueError:
-                        print(f"Error: File '{selection}' has unexpected key structure. Expected (ID, Scenario). Aborting.")
-                        return
-
-                    if key in ground_truth_data:
-                        gt_row = ground_truth_data[key]
-                        
-                        for col in requirement_columns:
-                            if col not in gt_row or col not in human_row: continue
-                            
-                            gt_val = gt_row.get(col, '').strip().lower()
-                            human_val = human_row.get(col, '').strip()
-                            gt_is_elicited = gt_val != 'no'
-                            human_is_elicited = human_val != ''
-                            message = f"ID: {interview_id}, Scenario: {scenario}, Requirement: {col}"
-
-                            if gt_is_elicited and human_is_elicited: results["True Positives"].append(message)
-                            elif not gt_is_elicited and human_is_elicited: results["False Positives"].append(message)
-                            elif gt_is_elicited and not human_is_elicited: results["False Negatives"].append(message)
-                            elif not gt_is_elicited and not human_is_elicited: results["True Negatives"].append(message)
-                    else:
-                        print(f"Warning: Entry for {key} found in human analysis but not in ground truth. Skipping.")
-
-                print("Comparison complete.\n")
-
-                if PRINT_FULL_RESULTS:
-                    for category, items in results.items():
-                        print(f"--- {category} (Total: {len(items)}) ---")
-                        if not items: print("None Found")
-                        else:
-                            for item in items: print(item)
-                    print("\n" + "="*60 + "\n")
-
-                tp = len(results["True Positives"])
-                fp = len(results["False Positives"])
-                fn = len(results["False Negatives"])
-                tn = len(results["True Negatives"])
                 
-                # Pass the file handle to the print function
-                print_performance_metrics(tp, fp, fn, tn, iteration_num=None, output_file=f_out)
+
 
 
     except FileNotFoundError as e:
@@ -302,5 +323,9 @@ def analyze_requirement_data():
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
 
-if __name__ == "__main__":
+def main():
     analyze_requirement_data()
+
+
+if __name__ == "__main__":
+    main()

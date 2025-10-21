@@ -14,7 +14,7 @@ Recreation:
 2. run `llm-call_retrieve-requirements.py`, check `progress.log` for any LLM calls that were not automatically fixed. This creates `single_results.csv` and `meta_results.csv` in `results` folder
 3. run `verify_csv_content.py` to check for any issues in the csv files created. Check the python file for instructions on what FAILED means for a specific test
 4. run `verify_quotes.py` to check failed quotes. Check this file for the conditions. Most likely some quotes fail. Check these in `single_results.csv` or `meta_results.csv`
-5. run `llm-call_check-requirements.py`, again check `progress.log` for any failed LLM calls
+5. run `llm-call_check-requirements.py`, again check `progress.log` for any failed LLM calls that were not succesfully retried
 6. run `verify_human.py` and go through the on-screen steps in the GUI
 7. open folder results. Move `analysis_meta_human.csv`, `analysis_single_human.csv` and `human_verification_state.json` into a folder inside `results` folde which you name _researcherx_ where the x is the number of the researcher. In our case 3 researchers conducted the human-in-the-loop intervention so we have `researcher1`, `researcher2` and `researcher3` folders
 8. run `combine_human_assessments.py`

@@ -76,19 +76,17 @@ def trim_csv_file(file_path: str, last_column_to_keep: str):
         print("The original file may not have been modified.")
 
 
-if __name__ == "__main__":
-    # Define the target column that marks the end of the data to keep
+
+def main():
+    """Main entry point for running the script directly or via import."""
     TARGET_COLUMN = "R30_QT"
 
-    # Define the paths to the CSV files, assuming a similar "results" subfolder structure
     try:
         base_directory = os.getcwd()
         results_directory = os.path.join(base_directory, "results")
-        
         single_file_path = os.path.join(results_directory, "single_results.csv")
         meta_file_path = os.path.join(results_directory, "meta_results.csv")
 
-        # Process both files
         trim_csv_file(single_file_path, TARGET_COLUMN)
         print("-" * 50)
         trim_csv_file(meta_file_path, TARGET_COLUMN)
@@ -96,3 +94,7 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"\nAn unexpected error occurred: {e}")
         sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

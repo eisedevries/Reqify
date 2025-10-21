@@ -7,7 +7,7 @@ import math
 RESULTS_DIR = 'results'
 RESEARCHER_PREFIX = 'researcher'
 
-def load_and_clean_csv(file_path: str, target_filename: str) -> (dict, list):
+def load_and_clean_csv(file_path: str, target_filename: str):
     """
     Robustly loads a CSV file. It automatically detects the delimiter,
     handles 'latin-1' encoding, cleans a Byte Order Mark (BOM), and returns
@@ -240,8 +240,7 @@ def create_combined_analysis(target_filename: str, output_filename: str):
     print(f"Total individual entries kept (consensus): {kept_entries_count}")
     print("="*60)
 
-
-if __name__ == "__main__":
+def main():
     # --- Run for single_human ---
     create_combined_analysis(
         target_filename='analysis_single_human.csv',
@@ -253,3 +252,6 @@ if __name__ == "__main__":
         target_filename='analysis_meta_human.csv',
         output_filename='combined_analysis_meta_human.csv'
     )
+
+if __name__ == "__main__":
+    main()

@@ -203,24 +203,24 @@ def print_failed_quotes_report(file_label: str, failed_quotes: list):
         print(tabulate(table_data, headers=headers, tablefmt="simple"))
 
 
-if __name__ == "__main__":
-    # Define base paths
+def main():
     base_dir = os.getcwd()
     results_dir = os.path.join(base_dir, "results")
     transcripts_dir = os.path.join(base_dir, "transcripts")
 
-    # Define file paths
     single_file_path = os.path.join(results_dir, "single_results.csv")
     meta_file_path = os.path.join(results_dir, "meta_results.csv")
 
-    # --- Process single_results.csv ---
     failed_single = verify_quotes_in_transcripts(
         single_file_path, transcripts_dir, req_start_letter="B"
     )
     print_failed_quotes_report("single_results.csv", failed_single)
 
-    # --- Process meta_results.csv ---
     failed_meta = verify_quotes_in_transcripts(
         meta_file_path, transcripts_dir, req_start_letter="E"
     )
     print_failed_quotes_report("meta_results.csv", failed_meta)
+
+
+if __name__ == "__main__":
+    main()

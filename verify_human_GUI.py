@@ -365,8 +365,11 @@ class VerificationApp:
     def clear_window(self):
         for widget in self.root.winfo_children(): widget.destroy()
 
-if __name__ == "__main__":
+def main():
     root = tk.Tk()
     os.makedirs('results', exist_ok=True)
     app = VerificationApp(root)
     root.mainloop()
+
+if __name__ == "__main__":
+    main()
