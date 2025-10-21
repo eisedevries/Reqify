@@ -28,31 +28,21 @@ Please note that one of the limitations of this repository is that the code is, 
 The code was written for Python 3.13, but may work on earlier releases.
 
 1. Navigate to your project folder:
-`cd path/to/your/project`
+   - `cd path/to/your/project`
 
-2. Create a virtual environment (commands may differ per OS):
-`python3.13 -m venv venv`
-or
-`py -3.13 -m venv venv`
+2. Create a virtual environment:
+   - `python3.13 -m venv venv` or `py -3.13 -m venv venv`
 
 3. Activate the virtual environment
-Linux / macOS:  
-`source venv/bin/activate`
-
-Windows:  
-`venv\Scripts\activate`
+   - Linux / macOS: `source venv/bin/activate`
+   - Windows: `venv\Scripts\activate`
 
 4. Install dependencies
-`pip install -r requirements.txt`
+   - `pip install -r requirements.txt`
 
-5. You should now be able to run Python scripts e.g.:
-Linux / macOS:  
-`python3 verify_human.py`
-
-Windows:  
-`python verify_human.py`  
-or  
-`py verify_human.py`
+5. You should now be able to run Python scripts:
+   - Linux / macOS: `python3 verify_human.py`
+   - Windows: `python verify_human.py` or `py verify_human.py`
 
 ### Order of scripts
 For more details see `usage_demo.ipynb`
