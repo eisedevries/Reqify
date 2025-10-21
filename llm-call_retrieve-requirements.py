@@ -66,7 +66,7 @@ You will be given the list of requirements an AI agent produced, the original tr
 2.  `{interview_transcript}`: The original source transcript the agent worked from.
 3.  `{original_prompt}`: The exact prompt that was given to the previous agent.
 
----
+
 
 ### Your Process
 
@@ -90,7 +90,7 @@ Rewrite the `{original_prompt}` from scratch. Your new prompt must be a complete
 -   **Preserve JSON Output:** The new prompt **must** instruct the System Analyst agent to provide its output in the exact same JSON format as the original. This is a non-negotiable part of the output format.
 -   **Make it a Complete Template:** The new prompt must be a full and complete prompt, ready for immediate use, including the `{interview_transcript}` placeholder.
 
----
+
 
 **Your Output:**
 Please provide your response in two parts: first, your analysis, and second, the improved prompt.
@@ -104,7 +104,7 @@ Please provide your response in two parts: first, your analysis, and second, the
 **Begin your analysis and prompt rewrite now.**
 """
 
-# --- CONSTANTS ---
+# CONSTANTS 
 TRANSCRIPTS_DIR = Path("transcripts")
 RESULTS_DIR = Path("results")
 LOG_FILE = "progress.log"
@@ -114,7 +114,7 @@ META_ITERATIONS = 3
 MAX_REQUIREMENTS_FOR_HEADER = 30 # CHANGE FIXED DATA LENGTH HERE in case you want more or less than 30 requirements
 MAX_RETRIES = 3
 
-# --- SETUP FUNCTIONS ---
+# SETUP FUNCTIONS 
 
 def setup_logging():
     logging.basicConfig(
@@ -141,7 +141,7 @@ def load_env_and_create_client():
         logging.error(f"Failed to create Azure OpenAI client. Check .env file and credentials. Error: {e}")
         return None
 
-# --- LLM & PARSING FUNCTIONS ---
+# LLM & PARSING FUNCTIONS 
 
 def call_llm(client, messages, model_name, deployment_name, is_json_output=True, timeout=60.0):
     """Makes a call to the LLM and returns the response content."""
@@ -203,7 +203,7 @@ def parse_meta_response(response_text: str):
         logging.error(f"Error parsing meta-cognitive response: {e}")
         return None, None
 
-# --- DATA PREPARATION & UTILS ---
+# DATA PREPARATION & UTILS 
 
 def format_transcript(transcript_content: dict) -> str:
     formatted_lines = []
@@ -233,7 +233,7 @@ def make_prompt_safe_for_format(prompt_text: str, placeholders: list) -> str:
 
     return prompt_text
 
-# --- CSV & STATE MANAGEMENT ---
+# CSV & STATE MANAGEMENT 
 
 def get_processed_ids(filepath, is_meta=False):
     if not filepath.exists():
@@ -263,10 +263,10 @@ def prepare_csv(filepath, headers):
             writer.writerow(headers)
         logging.info(f"Created new results file: {filepath}")
 
-# --- WORKFLOWS ---
+# WORKFLOWS 
 
 def run_single_prompt_workflow(client):
-    logging.info("--- Starting Single-Prompt Workflow ---")
+    logging.info("Starting Single-Prompt Workflow ")
     model_name = os.getenv("model_name")
     deployment_name = os.getenv("deployment")
 
@@ -317,7 +317,7 @@ def run_single_prompt_workflow(client):
             logging.warning(f"Skipping CSV entry for {interview_id} due to processing error.")
 
 def run_meta_prompt_workflow(client):
-    logging.info("--- Starting Meta-Prompt Workflow ---")
+    logging.info("Starting Meta-Prompt Workflow ")
     model_name = os.getenv("model_name")
     deployment_name = os.getenv("deployment")
     
@@ -352,11 +352,11 @@ def run_meta_prompt_workflow(client):
                 continue
 
             iteration_successful = False
-            # --- NEW: Retry loop for each iteration ---
+            # Retry loop for each iteration 
             for attempt in range(1, MAX_RETRIES + 1):
                 logging.info(f"Processing {interview_id} - Iteration {iteration} (Attempt {attempt}/{MAX_RETRIES})")
 
-                # --- 1. Analyst Elicitation Step ---
+                # 1. Analyst Elicitation Step 
                 final_analyst_prompt = current_prompt.format(interview_transcript=transcript_text)
                 analyst_messages = [{"role": "user", "content": final_analyst_prompt}]
                 response_content = call_llm(client, analyst_messages, model_name, deployment_name, is_json_output=True)
@@ -366,7 +366,7 @@ def run_meta_prompt_workflow(client):
                     logging.warning(f"Analyst call failed on attempt {attempt} for Iteration {iteration}.")
                     continue # Go to the next attempt
 
-                # --- 2. Meta-Prompt Rewrite Step (if needed) ---
+                # 2. Meta-Prompt Rewrite Step (if needed) 
                 next_prompt = current_prompt
                 next_analysis = analysis
 
@@ -394,7 +394,7 @@ def run_meta_prompt_workflow(client):
                     next_analysis = parsed_analysis
                     next_prompt = make_prompt_safe_for_format(new_prompt, ['interview_transcript'])
                 
-                # --- 3. Success: Commit results and break retry loop ---
+                # 3. Success: Commit results and break retry loop 
                 logging.info(f"Iteration {iteration} succeeded on attempt {attempt}.")
                 
                 sanitized_prompt = current_prompt.replace(';', ',')
@@ -419,7 +419,6 @@ def run_meta_prompt_workflow(client):
                 logging.error(f"Iteration {iteration} failed after {MAX_RETRIES} attempts. Aborting for this transcript.")
                 break # Exit the main iteration loop
 
-# --- MAIN EXECUTION ---
 
 if __name__ == "__main__":
     setup_logging()

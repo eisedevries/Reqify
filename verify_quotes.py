@@ -1,4 +1,3 @@
-# ====================================================================================
 # This script performs advanced fuzzy matching to verify quotes, including those
 # containing ellipses (...) representing non-contiguous text.
 #
@@ -12,11 +11,7 @@
 #   4. It compiles and prints a report listing all quotes that fall below the
 #      90% similarity threshold, along with their calculated score.
 #
-# NOTE: This script requires the 'thefuzz' and 'python-Levenshtein' libraries.
-# You can install them by running:
-#   pip install thefuzz
-#   pip install python-Levenshtein
-# ====================================================================================
+
 
 import csv
 import os

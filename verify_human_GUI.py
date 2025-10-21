@@ -7,6 +7,8 @@ import csv
 import re
 import string
 
+# TODO: add better documentation
+
 class VerificationApp:
     def __init__(self, root):
         self.root = root
@@ -180,7 +182,7 @@ class VerificationApp:
         ttk.Button(control_frame, text="Next >", command=self.next_req).pack(side='left', padx=5)
         self.nav_label = ttk.Label(control_frame, text="", font=("Helvetica", 10)); self.nav_label.pack(side='left', padx=20)
         
-        # --- NEW: Validate button and Switch frame ---
+        # --- Validate button and Switch frame ---
         switch_frame = ttk.Frame(control_frame); switch_frame.pack(side='right')
         validate_btn = ttk.Button(control_frame, text="Validate Output", command=self.validate_all_matches)
         validate_btn.pack(side='right', padx=(0, 20))
@@ -299,7 +301,7 @@ class VerificationApp:
         locations = str(cell_value).split(',')
         return ','.join([loc for loc in locations if decisions.get(loc) == 'Yes'])
 
-    # --- NEW: Validation Logic ---
+    # --- Validation Logic ---
 
     def _get_all_locations_for_req(self, req_id):
         """Helper to parse the dataframe for all unique match locations for a req_id."""

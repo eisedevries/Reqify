@@ -9,7 +9,7 @@ RESEARCHER_PREFIX = 'researcher'
 
 def load_and_clean_csv(file_path: str, target_filename: str):
     """
-    Robustly loads a CSV file. It automatically detects the delimiter,
+    Loads a CSV file. It automatically detects the delimiter,
     handles 'latin-1' encoding, cleans a Byte Order Mark (BOM), and returns
     the data as a dictionary keyed appropriately.
     

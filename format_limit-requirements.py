@@ -15,14 +15,14 @@ def trim_csv_file(file_path: str, last_column_to_keep: str):
     encoding = 'utf-8'
     delimiter = ';'
 
-    # --- Step 1: Check if the file exists before proceeding ---
+    # 1. Check if the file exists before proceeding
     if not os.path.exists(file_path):
         print(f"Error: File not found at '{file_path}'. Skipping.")
         return
 
     print(f"Processing file: {os.path.basename(file_path)}...")
 
-    # --- Step 2: Read the entire file into memory ---
+    # 2. Read the entire file into memory
     try:
         with open(file_path, mode='r', newline='', encoding=encoding) as file:
             reader = csv.reader(file, delimiter=delimiter)
@@ -35,7 +35,7 @@ def trim_csv_file(file_path: str, last_column_to_keep: str):
         print("File is empty. No changes made.")
         return
 
-    # --- Step 3: Find the index of the last column to keep ---
+    # 3. Find the index of the last column to keep
     header = all_rows[0]
     try:
         # Find the column index (0-based) of the target header
@@ -45,7 +45,7 @@ def trim_csv_file(file_path: str, last_column_to_keep: str):
         print("No changes have been made.")
         return
 
-    # --- Step 4: Create the new, trimmed dataset ---
+    # 4. Create the new, trimmed dataset
     # The new number of columns will be the index + 1
     num_cols_to_keep = cut_off_index + 1
     
@@ -61,7 +61,7 @@ def trim_csv_file(file_path: str, last_column_to_keep: str):
         trimmed_row = row[:num_cols_to_keep]
         trimmed_data.append(trimmed_row)
 
-    # --- Step 5: Write the trimmed data back to the original file ---
+    # 5. Write the trimmed data back to the original file
     try:
         with open(file_path, mode='w', newline='', encoding=encoding) as file:
             writer = csv.writer(file, delimiter=delimiter)
