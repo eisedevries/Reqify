@@ -13,12 +13,13 @@ The repository contains a pipeline for automated requirements elicitation from i
 For details on inputs and outputs as well as example runs open `usage_demo.ipynb`.
 
 ## Data preparation
-The dataset used in this project originates from the paper *[LLMREI: Automating Requirements Elicitation Interviews with LLMs](https://arxiv.org/abs/2507.02564)* by Korn et al. The dataset is available here: https://zenodo.org/records/15016930. For this project we specifically focus on dataset `RQ2_data.csv` which contains a ground truth list of requirements which can be elicited from the transcripts available in `interviews_json.zip`. Note that we recreated `RQ2_data.csv`. In this repository `RQ2_data.csv` is available under `ground_truth/dataset_llmrei.csv` and our recreated ground truth is available under `ground_truth/dataset_new.csv`.
+The dataset used in this project originates from the paper *[LLMREI: Automating Requirements Elicitation Interviews with LLMs](https://arxiv.org/abs/2507.02564)* by Korn et al. The dataset is available [here](https://zenodo.org/records/15016930). For this project we specifically focus on dataset `RQ2_data.csv` which contains a ground truth list of requirements which can be elicited from the transcripts available in `interviews_json.zip`. Note that we recreated `RQ2_data.csv`. In this repository `RQ2_data.csv` is available under `ground_truth/dataset_llmrei.csv` and our recreated ground truth dataset is available under `ground_truth/dataset_new.csv`.
 
 In order to run the pipeline you need to have the following files:
 - `ground_truth/dataset_new.csv`
 - `requirements_list.csv`
 - `scenarios_list.csv`
+
 Also you will need to create a `.env` file in order to communicate with the Azure OpenAI API.
 
 Please note that one of the limitations of this repository is that the code is, to some extent, tailored to the specific data we have. This occurs because certain parts of the code reference a fixed data length. For example, if your dataset includes additional requirements, you will need to adjust the code accordingly; otherwise, the extra columns in your CSV files may not be processed correctly. Some parts that need to be changed are marked using the comment `# CHANGE FIXED DATA LENGTH HERE` in the codebase.
