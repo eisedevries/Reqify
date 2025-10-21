@@ -1,0 +1,13 @@
+--- Performance Metrics ---
+Sum True Positives:  84
+Sum False Positives: 2
+Sum False Negatives: 403
+Sum True Negatives:  57
+-------------------------
+Accuracy:  25.82%
+Precision: 97.67%
+Recall:    17.25%
+F1 Score:  29.32%
+
+============================================================
+
