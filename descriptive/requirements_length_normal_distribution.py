@@ -182,7 +182,7 @@ def main():
     plt.tight_layout()
 
     # save next to this script
-    out_path = os.path.join(script_folder, "normal_distribution.png")
+    out_path = os.path.join(script_folder, "requirements_length_normal_distribution.png")
     plt.savefig(out_path, dpi=200, bbox_inches="tight")
     print(f"Saved figure to {out_path}")
 

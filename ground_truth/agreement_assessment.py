@@ -1,5 +1,3 @@
-# --- Match Percentage Calculation Logic ---
-#
 # This script compares two datasets to determine the agreement on whether a requirement
 # was elicited during an interview. The match percentage is calculated as follows:
 #
@@ -105,13 +103,11 @@ def main():
     Main function to execute the comparison logic.
     """
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    # Go one directory up from the script's location, then into 'ground_truth'
-    ground_truth_folder = os.path.join(os.path.dirname(script_dir), 'ground_truth')
 
     # Define file paths
-    llmrei_filepath = os.path.normpath(os.path.join(ground_truth_folder, 'dataset_llmrei.csv'))
-    new_filepath = os.path.normpath(os.path.join(ground_truth_folder, 'dataset_new.csv'))
-    
+    llmrei_filepath = os.path.normpath(os.path.join(script_dir, 'dataset_llmrei.csv'))
+    new_filepath = os.path.normpath(os.path.join(script_dir, 'dataset_new.csv'))
+
     id_column = "Interview ID"
 
     # Load data

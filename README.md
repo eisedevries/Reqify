@@ -62,6 +62,7 @@ Every command and filename you need appears in `usage_demo.ipynb`.
 
 ### Other scripts
 The folder `descriptive` contains various other Python scripts that can be used for analyses.
+The folder `ground_truth` contains the script `agreement_assessment.py` which can be used to test the agreement between two datasets regarding the elicited requirements.
 
 ## Recreation checklist
 1. Confirm all transcripts are in `transcripts`

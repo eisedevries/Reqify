@@ -151,5 +151,5 @@ plot_combined_bar_distribution(
     meta_lengths,
     single_lengths,
     "Distribution of Average Requirement Lengths per Interview",
-    "distribution_graph_average.png"
+    "requirements_length_distribution.png"
 )

@@ -203,5 +203,5 @@ single_grouped = get_lengths_grouped_by_index(single_df, 1, 2)
 plot_averages_boxplots(
     meta_grouped=meta_grouped,
     single_grouped=single_grouped,
-    filename="boxplot_averages.png"
+    filename="requirements_length_boxplot.png"
 )
