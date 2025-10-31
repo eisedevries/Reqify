@@ -199,6 +199,56 @@ def plot_combined_boxplot_with_meta_labels(meta_grouped, single_grouped, title, 
     print(f"Saved boxplot with iteration labels on Meta outliers to {out_path}")
     plt.close()
 
+def _compute_cv(values):
+    """Return coefficient of variation for a list of numeric values."""
+    if not values:
+        return np.nan
+    arr = np.asarray(values, dtype=float)
+    m = np.mean(arr)
+    if m == 0:
+        return np.nan
+    s = np.std(arr, ddof=1) if arr.size > 1 else 0.0
+    return s / m
+
+def _compute_outlier_ratio(values):
+    """Return outlier ratio using 1.5 IQR rule for a list of numeric values."""
+    if not values:
+        return np.nan
+    arr = np.asarray(values, dtype=float)
+    if arr.size < 4:
+        return 0.0
+    q1, q3 = np.percentile(arr, [25, 75])
+    iqr = q3 - q1
+    lower, upper = q1 - 1.5 * iqr, q3 + 1.5 * iqr
+    outliers = np.sum((arr < lower) | (arr > upper))
+    return outliers / arr.size
+
+def compute_metrics_meta(meta_grouped):
+    """Average CV across positions and average outlier ratio across positions for meta."""
+    cvs, ratios = [], []
+    for i in sorted(meta_grouped.keys()):
+        vals = [v[0] for v in meta_grouped[i]]
+        cvs.append(_compute_cv(vals))
+        ratios.append(_compute_outlier_ratio(vals))
+    cvs = [v for v in cvs if not np.isnan(v)]
+    ratios = [v for v in ratios if not np.isnan(v)]
+    avg_cv = float(np.mean(cvs)) if cvs else float('nan')
+    avg_ratio = float(np.mean(ratios)) if ratios else float('nan')
+    return avg_cv, avg_ratio
+
+def compute_metrics_single(single_grouped):
+    """Average CV across positions and average outlier ratio across positions for single."""
+    cvs, ratios = [], []
+    for i in sorted(single_grouped.keys()):
+        vals = single_grouped[i]
+        cvs.append(_compute_cv(vals))
+        ratios.append(_compute_outlier_ratio(vals))
+    cvs = [v for v in cvs if not np.isnan(v)]
+    ratios = [v for v in ratios if not np.isnan(v)]
+    avg_cv = float(np.mean(cvs)) if cvs else float('nan')
+    avg_ratio = float(np.mean(ratios)) if ratios else float('nan')
+    return avg_cv, avg_ratio
+
 # --- Main execution ---
 # Group data (Column E is index 4 for meta, Column B is index 1 for single)
 meta_grouped = get_lengths_and_iterations_grouped_by_index(meta_df, 4, 2)
@@ -208,6 +258,15 @@ single_grouped = get_lengths_grouped_by_index(single_df, 1, 2)
 plot_combined_boxplot_with_meta_labels(
     meta_grouped,
     single_grouped,
-    "Boxplot of Requirement Lengths by Position (Meta vs Single)",
+    "",
     "requirements_length_boxplot_per_position.png"
 )
+
+# Metrics printing
+meta_cv, meta_outlier_ratio = compute_metrics_meta(meta_grouped)
+single_cv, single_outlier_ratio = compute_metrics_single(single_grouped)
+
+print(f"Meta average coefficient of variation across positions: {meta_cv:.6f}")
+print(f"Single average coefficient of variation across positions: {single_cv:.6f}")
+print(f"Meta average outlier ratio across positions: {meta_outlier_ratio:.6f}")
+print(f"Single average outlier ratio across positions: {single_outlier_ratio:.6f}")
